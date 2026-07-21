@@ -21,10 +21,12 @@ pip install -r requirements.txt
 |     ├── preprocess_score_data.ipynb   # preprocess raw questionnaires into clean dataframes
 |     └── trim_vids_and_logs.py         # trim recorded videos and logs to when the start button is pressed
 ├── visualise/
-|     ├── linearmodels.ipynb            # linear mixed model scripts
-|     ├── lmm_blocks.ipynb              # linear mixed models and other plots
-|     ├── vis_demographics.ipynb        # spearman matrix, general demographics plots
-|     └── vis_scores.ipynb              # DV boxplots, tests
+|     ├── functions.py                  # Helper functions
+|     ├── participant_stats.ipynb       # Computes descriptive statistics of the participant sample
+|     ├── rq1_rq2_conditions.ipynb      # Analyses experimental condition effects for RQ1 and RQ2.
+|     ├── rq3_correlations.ipynb        # Exploratory correlation analyses for RQ3 using Spearman correlation matrices
+|     ├── rq3_lmms.ipynb                # Linear mixed models for RQ3 to investigate individual differences
+|     └── rq4_lmms.ipynb                # Linear mixed models for RQ4 to examine potential order effects
 ├── requirements.txt
 └── README.md
 ```
