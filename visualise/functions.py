@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from itertools import combinations
 
+import Path
+import re
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -408,3 +410,69 @@ def stylised_boxplot_grouped(df, metric, group_colors=None):
 
     plt.tight_layout()
     plt.show()
+
+
+def print_json_structure():
+
+    DATA_FOLDER = "trimmed_data"
+
+    VIDEO_PATTERN = re.compile(r"varjo_capture_(.+?)_trimmed\.mp4$")
+    GAZE_PATTERN = re.compile(r"varjo_gaze_output_(.+?)_trimmed\.csv$")
+
+    participants = []
+
+    root = Path(DATA_FOLDER)
+
+    for participant_dir in sorted(root.iterdir(), key=lambda p: int(p.name)):
+        if not participant_dir.is_dir():
+            continue
+
+        participant_id = f"P{int(participant_dir.name):02d}"
+
+        video_files = sorted(participant_dir.glob("varjo_capture_*_trimmed.mp4"))
+
+        videos = []
+
+        for block_idx, video_file in enumerate(video_files):
+            match = VIDEO_PATTERN.match(video_file.name)
+
+            if not match:
+                continue
+
+            timestamp = match.group(1)
+
+            gaze_file = participant_dir / f"varjo_gaze_output_{timestamp}_trimmed.csv"
+
+            if not gaze_file.exists():
+                print(f"Missing gaze file for: {video_file.name}")
+                continue
+
+            videos.append({
+                "block": str(block_idx),
+                "video": f'{{DATA_FOLDER}}/{participant_dir.name}/{video_file.name}',
+                "gaze": f'{{DATA_FOLDER}}/{participant_dir.name}/{gaze_file.name}',
+            })
+
+        participants.append({
+            "id": participant_id,
+            "videos": videos
+        })
+
+    print("PARTICIPANTS = [")
+
+    for participant in participants:
+        print("    {")
+        print(f'        "id": "{participant["id"]}",')
+        print('        "videos": [')
+
+        for video in participant["videos"]:
+            print(
+                f'            {{"block": "{video["block"]}", '
+                f'"video": f"{video["video"]}", '
+                f'"gaze": f"{video["gaze"]}"}},'
+            )
+
+        print("        ]")
+        print("    },")
+
+    print("]")
