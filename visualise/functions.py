@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from itertools import combinations
 
-import Path
+from pathlib import Path
 import re
 import seaborn as sns
 import matplotlib.pyplot as plt
